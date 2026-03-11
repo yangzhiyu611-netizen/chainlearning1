@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Learning Preview (CET-6 Tradition)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#1152d4",
+              "background-light": "#f6f6f8",
+              "background-dark": "#101622",
+            },
+            fontFamily: {
+              "display": ["Lexend"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex h-auto min-h-screen w-full flex-col max-w-md mx-auto bg-white dark:bg-background-dark shadow-xl overflow-x-hidden">
+<!-- Top App Bar -->
+<div class="flex items-center bg-white dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 border-b border-slate-100 dark:border-slate-800">
+<div class="text-slate-900 dark:text-slate-100 flex size-12 shrink-0 items-center justify-start">
+<span class="material-symbols-outlined cursor-pointer" style="">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-12" style="">Preview</h2>
+</div>
+<!-- Header Section -->
+<div class="px-6 pt-8 pb-4">
+<h3 class="text-slate-900 dark:text-slate-100 tracking-tight text-2xl font-bold leading-tight text-center" style="">
+                CET-6 主题：中国传统文化</h3>
+<div class="flex items-center justify-center gap-2 mt-3">
+<span class="h-px w-8 bg-primary/30"></span>
+<h4 class="text-primary text-xs font-bold uppercase tracking-widest" style="">六级写作&amp;翻译专题</h4>
+<span class="h-px w-8 bg-primary/30"></span>
+</div>
+</div>
+<!-- Content Grid -->
+<div class="grid grid-cols-2 gap-2 p-6 mb-24"><!-- Card 1: Imperial -->
+<div class="flex flex-col items-center text-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-3 transition-all hover:border-primary/50">
+<span class="text-2xl">👑</span>
+<h2 class="text-slate-900 dark:text-slate-100 text-xs font-semibold leading-tight capitalize">Imperial</h2>
+</div>
+<!-- Card 2: Examination -->
+<div class="flex flex-col items-center text-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-3 transition-all hover:border-primary/50">
+<span class="text-2xl">📖</span>
+<h2 class="text-slate-900 dark:text-slate-100 text-xs font-semibold leading-tight capitalize">Examination</h2>
+</div>
+<!-- Card 3: Ritual -->
+<div class="flex flex-col items-center text-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-3 transition-all hover:border-primary/50">
+<span class="text-2xl">⛩️</span>
+<h2 class="text-slate-900 dark:text-slate-100 text-xs font-semibold leading-tight capitalize">Ritual</h2>
+</div>
+<!-- Card 4: Bronze -->
+<div class="flex flex-col items-center text-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 p-3 transition-all hover:border-primary/50">
+<span class="text-2xl">🏆</span>
+<h2 class="text-slate-900 dark:text-slate-100 text-xs font-semibold leading-tight capitalize">Bronze</h2>
+</div></div>
+<!-- Floating Background Patterns (Visual Interest) -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05] overflow-hidden">
+<div class="absolute -top-10 -right-10 w-64 h-64 bg-primary rounded-full blur-3xl"></div>
+<div class="absolute bottom-40 -left-10 w-48 h-48 bg-primary rounded-full blur-3xl"></div>
+</div>
+<!-- Sticky Footer Action -->
+<div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-6 bg-gradient-to-t from-white via-white dark:from-background-dark dark:via-background-dark to-transparent">
+<button class="w-full flex items-center justify-center gap-2 rounded-xl h-14 bg-primary text-white text-base font-bold transition-transform active:scale-95 shadow-lg shadow-primary/25" style="">
+<span class="truncate" style="">Start Learning</span>
+<span class="material-symbols-outlined text-xl" style="">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>
