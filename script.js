@@ -69,7 +69,7 @@
       correctIndex: 0,
       meaning: 'n. 青铜；青铜材料',
       meaningNote: '近3年出现2次',
-      options: ['青铜；青铜材料', '青铜器皿;', '青铜礼器'],
+      options: ['青铜材料', '青铜器皿;', '青铜礼器'],
       hintText: ['bronze 是材料名词', 'bronze ware / bronze vessels / ritual bronzes 才指具体器物'],
       example: 'Bronze played an important role in the development of ancient Chinese civilization.',
       exampleZh: '青铜在中国古代文明的发展中发挥了重要作用。',
@@ -96,7 +96,7 @@
     },
     {
       term: 'imperial court',
-      image: 'images/imperial-court.png',
+      image: 'images/imperial-court.',
       correctIndex: 1,
       meaning: '朝廷；宫廷',
       options: ['皇家园林', '朝廷；宫廷', '科举考场'],
@@ -335,6 +335,64 @@
 
     window.speechSynthesis.speak(u);
   }
+
+  function renderQuestion() {
+    var q = getCurrentQuestion();
+    if (!q) return document.createElement('div');
+    var idx = state.chainIndex;
+    var total = CHAIN.length;
+    var section = document.createElement('div');
+    section.className = 'app-main';
+    var hints = q.hintText ? (Array.isArray(q.hintText) ? q.hintText : [q.hintText]) : [];
+    var hintContent = '';
+    if (state.showHint) {
+      hintContent = '<div class="question-hint-content">';
+      if (hints.length) {
+        hintContent += '<p class="hint-label">Hint:</p><ul class="hint-list">';
+        hints.forEach(function (h, i) {
+          hintContent += '<li>' + escapeHtml(h) + '</li>';
+        });
+        hintContent += '</ul>';
+      }
+      hintContent += '</div>';
+    }
+    var termImg = (q.image) ? '<img src="' + escapeHtml(q.image) + '" alt="' + escapeHtml(q.term) + '"/>' : '';
+    var imgHtml = '<div class="question-image-wrap">' + termImg + '</div>' + hintContent;
+    var optionsHtml = q.options.map(function (opt, i) {
+      return '<button type="button" class="option-btn" data-index="' + i + '">' +
+        '<span class="option-letter">' + LETTERS[i] + '</span>' +
+        '<span class="option-text">' + opt + '</span>' +
+      '</button>';
+    }).join('');
+    section.innerHTML =
+      imgHtml +
+      '<div class="question-term-block">' +
+        '<div class="question-term-row">' +
+          '<h2 class="question-term">' + escapeHtml(q.term) + '</h2>' +
+          '<button type="button" class="icon-btn" data-action="play-audio" title="播放发音"><span class="material-symbols-outlined">volume_up</span></button>' +
+        '</div>' +
+        '<div class="question-hint-row">' +
+          '<button type="button" class="icon-btn icon-btn-hint" data-action="hint" title="Hint">' +
+            '<span class="material-symbols-outlined">lightbulb</span>' +
+          '</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="options">' + optionsHtml + '</div>' +
+      '<div class="question-actions">' +
+        '<span class="question-step">' + (idx + 1) + ' / ' + total + '</span>' +
+      '</div>';
+    section.querySelectorAll('[data-action="hint"]').forEach(function (btn) {
+      btn.onclick = function () {
+        state.showHint = true;
+        render();
+      };
+    });
+    section.querySelectorAll('[data-action="play-audio"]').forEach(function (btn) {
+      btn.onclick = function () {
+        var curr = getCurrentQuestion();
+        if (curr && curr.term) speakTerm(curr.term);
+      };
+    });
     section.querySelectorAll('.option-btn').forEach(function (btn) {
       btn.onclick = function () {
         state.userChoice = parseInt(btn.getAttribute('data-index'), 10);
