@@ -96,7 +96,7 @@
     },
     {
       term: 'imperial court',
-      image: 'images/imperial-court.',
+      image: 'images/imperial-court.png',
       correctIndex: 1,
       meaning: '朝廷；宫廷',
       options: ['皇家园林', '朝廷；宫廷', '科举考场'],
