@@ -271,70 +271,70 @@
 
   function speakTerm(text) {
     if (!text || !window.speechSynthesis) return;
+
+    // 选一个更自然的英文 voice（不同系统/浏览器名称不同，尽量挑常见自然音色）
+    function pickBestEnglishVoice() {
+      var voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+      if (!voices || !voices.length) return null;
+      var preferredNames = [
+        'Samantha', 'Alex', 'Daniel', // macOS 常见
+        'Google US English', 'Google UK English Female', // Chrome 常见
+        'Microsoft Aria', 'Microsoft Jenny', 'Microsoft Guy' // Edge 常见
+      ];
+      var isEnglish = function (v) { return v && typeof v.lang === 'string' && v.lang.toLowerCase().indexOf('en') === 0; };
+      var englishVoices = voices.filter(isEnglish);
+      var list = englishVoices.length ? englishVoices : voices;
+
+      // 优先匹配名称
+      for (var i = 0; i < preferredNames.length; i++) {
+        for (var j = 0; j < list.length; j++) {
+          var name = (list[j].name || '');
+          if (name.indexOf(preferredNames[i]) !== -1) return list[j];
+        }
+      }
+      // 再优先 en-US / en-GB
+      for (var k = 0; k < list.length; k++) {
+        var lang = (list[k].lang || '').toLowerCase();
+        if (lang === 'en-us' || lang === 'en_us' || lang === 'en-us-x-sfg') return list[k];
+      }
+      for (var m = 0; m < list.length; m++) {
+        var lang2 = (list[m].lang || '').toLowerCase();
+        if (lang2 === 'en-gb' || lang2 === 'en_gb') return list[m];
+      }
+      return list[0] || null;
+    }
+
+    // 某些浏览器第一次 getVoices() 为空，需要等 voiceschanged
+    if (window.speechSynthesis.getVoices && window.speechSynthesis.getVoices().length === 0) {
+      window.speechSynthesis.onvoiceschanged = window.speechSynthesis.onvoiceschanged || function () {};
+    }
+
     window.speechSynthesis.cancel();
-    var u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US';
-    u.rate = 0.9;
+
+    var cleaned = String(text).replace(/\s+/g, ' ').trim();
+    // 加一个句末标点，让语调更自然（尤其是词组）
+    var speakText = cleaned;
+    if (cleaned && !/[.!?]$/.test(cleaned)) speakText = cleaned + '.';
+
+    var u = new SpeechSynthesisUtterance(speakText);
+    var voice = pickBestEnglishVoice();
+    if (voice) {
+      u.voice = voice;
+      u.lang = voice.lang || 'en-US';
+    } else {
+      u.lang = 'en-US';
+    }
+
+    // 根据长度微调语速，避免短词太“死板”、长词组太快
+    var wc = cleaned.split(' ').filter(function (x) { return x; }).length;
+    if (wc <= 1) u.rate = 0.98;
+    else if (wc === 2) u.rate = 0.95;
+    else u.rate = 0.92;
+    u.pitch = 1.05;
+    u.volume = 1;
+
     window.speechSynthesis.speak(u);
   }
-
-  function renderQuestion() {
-    var q = getCurrentQuestion();
-    if (!q) return document.createElement('div');
-    var idx = state.chainIndex;
-    var total = CHAIN.length;
-    var section = document.createElement('div');
-    section.className = 'app-main';
-    var hints = q.hintText ? (Array.isArray(q.hintText) ? q.hintText : [q.hintText]) : [];
-    var hintContent = '';
-    if (state.showHint) {
-      hintContent = '<div class="question-hint-content">';
-      if (hints.length) {
-        hintContent += '<p class="hint-label">Hint:</p><ul class="hint-list">';
-        hints.forEach(function (h, i) {
-          hintContent += '<li>' + escapeHtml(h) + '</li>';
-        });
-        hintContent += '</ul>';
-      }
-      hintContent += '</div>';
-    }
-    var termImg = (q.image) ? '<img src="' + escapeHtml(q.image) + '" alt="' + escapeHtml(q.term) + '"/>' : '';
-    var imgHtml = '<div class="question-image-wrap">' + termImg + '</div>' + hintContent;
-    var optionsHtml = q.options.map(function (opt, i) {
-      return '<button type="button" class="option-btn" data-index="' + i + '">' +
-        '<span class="option-letter">' + LETTERS[i] + '</span>' +
-        '<span class="option-text">' + opt + '</span>' +
-      '</button>';
-    }).join('');
-    section.innerHTML =
-      imgHtml +
-      '<div class="question-term-block">' +
-        '<div class="question-term-row">' +
-          '<h2 class="question-term">' + escapeHtml(q.term) + '</h2>' +
-          '<button type="button" class="icon-btn" data-action="play-audio" title="播放发音"><span class="material-symbols-outlined">volume_up</span></button>' +
-        '</div>' +
-        '<div class="question-hint-row">' +
-          '<button type="button" class="icon-btn icon-btn-hint" data-action="hint" title="Hint">' +
-            '<span class="material-symbols-outlined">lightbulb</span>' +
-          '</button>' +
-        '</div>' +
-      '</div>' +
-      '<div class="options">' + optionsHtml + '</div>' +
-      '<div class="question-actions">' +
-        '<span class="question-step">' + (idx + 1) + ' / ' + total + '</span>' +
-      '</div>';
-    section.querySelectorAll('[data-action="hint"]').forEach(function (btn) {
-      btn.onclick = function () {
-        state.showHint = true;
-        render();
-      };
-    });
-    section.querySelectorAll('[data-action="play-audio"]').forEach(function (btn) {
-      btn.onclick = function () {
-        var curr = getCurrentQuestion();
-        if (curr && curr.term) speakTerm(curr.term);
-      };
-    });
     section.querySelectorAll('.option-btn').forEach(function (btn) {
       btn.onclick = function () {
         state.userChoice = parseInt(btn.getAttribute('data-index'), 10);
